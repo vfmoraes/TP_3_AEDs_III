@@ -1,7 +1,5 @@
 import java.util.Scanner;
 import java.io.File;
-import java.io.IOException;
-import java.io.File;
 import java.io.FilenameFilter;
 import aeds3.ArquivoLZW;
 
