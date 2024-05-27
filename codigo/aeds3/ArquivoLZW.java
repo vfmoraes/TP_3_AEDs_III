@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ArquivoLZW {
-    public static final int BITS_POR_INDICE = 12;
+    public static final int BITS_POR_INDICE = 16;
     
 
     public void atualizarPontosDeParada(RandomAccessFile out) throws Exception {
@@ -106,7 +106,7 @@ public class ArquivoLZW {
             //ir até o ponto de parada do arquivo
             while(inFileBackup.getFilePointer() != pntParada){
                 //ler index do arquivo
-                int index = inFileBackup.readShort(); // Leitura do index de 12bits
+                int index = inFileBackup.readShort(); // Leitura do index de 16bits
                 ArrayList<Byte> currentSequence;
                 //se o número lido for igual ao tamanho do dicionário adiciona o ultimo do anterior
                 if(index == dicionario.size()){
@@ -131,7 +131,7 @@ public class ArquivoLZW {
                 //imprimir sequencia atual no arquivo de saída
                 for (byte b : currentSequence) {
                     outputFile.write(b);
-                    System.out.print(b);
+                    // System.out.print(b);
                 }
                 previousSequence = new ArrayList<>(currentSequence);
             }
@@ -174,6 +174,8 @@ public class ArquivoLZW {
             out.writeLong(0);
         }
 
+        long qtdeTotalLinhas = 0;
+        long inicioCompressao = out.getFilePointer();
         //para cada arquivo no conjunto de string nomeArquivos, realizar a codificação separada e adicionar no arquivo de saída
         for (String arq : nomeArquivos) {
             File fl = new File(dir + arq);
@@ -214,7 +216,7 @@ public class ArquivoLZW {
             
             //abrir arquivo para leitura
             RandomAccessFile in = new RandomAccessFile(dir + arq, "r");
-
+            qtdeTotalLinhas += in.length();
 
             vetorBytes = new ArrayList<>();//inicializar vetor auxiliar
             while (in.getFilePointer() != in.length()) {//para todo o arquivo de leitura
@@ -249,7 +251,7 @@ public class ArquivoLZW {
                         dicionario.add(new ArrayList<>(vetorBytes));
                     }
                     vetorBytes.remove(vetorBytes.size() - 1); //remover o ultimo byte que não contém no dicionario
-                    out.writeShort(dicionario.indexOf(vetorBytes)); // Escrevendo index de 12-bit no arquivo de saída
+                    out.writeShort(dicionario.indexOf(vetorBytes)); // Escrevendo index de 16-bit no arquivo de saída
                     vetorBytes = new ArrayList<>();
                     vetorBytes.add(leitura);
                 }
@@ -258,8 +260,14 @@ public class ArquivoLZW {
             //escrever ponto de parada para o arquivo lido
             atualizarPontosDeParada(out);
             System.out.print(". Posição inicial/final do arquivo em backups - " + posInicial + "/" + out.getFilePointer() + "\n");
+            float razao = (float) in.length() / (out.getFilePointer() - posInicial);
+            System.out.println("Taxa de compressão do arquivo " + razao*100 + "%");
             in.close();
         }
+
+        long fimCompressao = out.getFilePointer();
+        float razao = (float) qtdeTotalLinhas / (fimCompressao-inicioCompressao);
+        System.out.println("\nTaxa de compressão do arquivo final " + razao*100 + "%");
 
         out.close();
         outNames.close();
