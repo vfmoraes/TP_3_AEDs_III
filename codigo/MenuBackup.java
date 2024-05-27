@@ -34,7 +34,7 @@ public class MenuBackup {
                     (new ArquivoLZW()).codifica("codigo/dados/");
                     break;
                 case 2:
-                    (new ArquivoLZW()).decodifica("codigo/dados/backups/backup-1716774728184.lzw");
+                    (new ArquivoLZW()).decodifica("codigo/dados/backups/backup-1716775483638.lzw");
                     break;
                 case 0:
                     break;
