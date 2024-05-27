@@ -251,7 +251,9 @@ public class ArquivoLZW {
                         dicionario.add(new ArrayList<>(vetorBytes));
                     }
                     vetorBytes.remove(vetorBytes.size() - 1); //remover o ultimo byte que não contém no dicionario
+
                     out.writeShort(dicionario.indexOf(vetorBytes)); // Escrevendo index de 16-bit no arquivo de saída
+                    
                     vetorBytes = new ArrayList<>();
                     vetorBytes.add(leitura);
                 }

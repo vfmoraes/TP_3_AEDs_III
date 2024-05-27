@@ -16,7 +16,7 @@ public class MenuBackup {
     // ---------------------
     // MENU_BACKUP
     // ---------------------
-    public String choseBackupFile() throws Exception{
+    public String chooseBackupFile() throws Exception{
         String backupPath = initialDataPath + "backups";
         File dir = new File(backupPath);
         String escolha = "";
@@ -88,7 +88,7 @@ public class MenuBackup {
                     (new ArquivoLZW()).codifica(initialDataPath, backupComplementPath);
                     break;
                 case 2:
-                    (new ArquivoLZW()).decodifica(choseBackupFile(), initialDataPath + backupComplementPath, initialDataPath + restoredComplementPath);
+                    (new ArquivoLZW()).decodifica(chooseBackupFile(), initialDataPath + backupComplementPath, initialDataPath + restoredComplementPath);
                     break;
                 case 0:
                     break;
