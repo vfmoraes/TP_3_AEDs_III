@@ -1,5 +1,5 @@
-# TP_2_AEDs_III
-Repositório do Trabalho Prático II de Algoritmos e Estrutura de Dados III
+# TP_3_AEDs_III
+Repositório do Trabalho Prático III de Algoritmos e Estrutura de Dados III
 
 #### Membros do grupo:
 - Luís Augusto Lima de Oliveira
@@ -7,66 +7,52 @@ Repositório do Trabalho Prático II de Algoritmos e Estrutura de Dados III
 
 # Relatório
 ## Implementações feitas pelo grupo
-Foram modificadas as funções CRUD da classe ArquivoLivros.java para incluir a Lista invertida em todas as suas operações. 
 
-####  Create
-- Foi realizado o tratamento sobre o título do livro a ser criado, em que utilizamos a biblioteca java.text.Normalizer para dissolver as acentuações na String, para em seguida remover os acentos com um .replaceAll. Em seguida, é utilizado o método .toLowerCase() para converter todos os caracteres da String em sua versão minúscula. (Esse mesmo tratamento foi utilizado no decorrer do código para qualquer manipulação de Strings envolvendo a Lista invertida)
-- Após tratada a String, todas as palavras são separadas através do método .split(" ")
-- Para cada palavra no array de Strings é feita uma verificação se a palavra é uma stop word.
-- Caso não seja uma stop word, ela é adicionada ao dicionário da lista invertida com o respectivo id do livro inserido.
+####  Criação da Classe ArquivoLZW
 
-#### Read
-- A String de pesquisa é tratada e cada palavra é separada.
-- Utilizando a função read da classe ListaInvertida, é feito a pesquisa em cima da primeira palavra válida (enquanto não é uma stopword avança para a próxima palavra).
-- Um array de IDs é retornado e armazenado para esta palavra.
-- A partir de um array temporário de IDs, é feito a pesquisa para as próximas palavras válidas.
-- Para cada palavra, é realizado a interseção entre o array de IDs temporário e o array de IDs principal.
-- É feito esse procedimento até que todas as palavras do array de Strings sejam verificadas ou que o array de IDs esteja vazio.
-- Após a verificação ser concluída, é criado um array de Livros com tamanho sendo a quantidade de IDs encontrados, sendo esses livros posteriormente buscados e armazenados a partir do método read da super classe.
-- Esse array de livros é posteriormente retornado e utilizado no mostrarLivros da classe MenuLivros
+* `void codifica(String dir, String backupComplement)`
+  * Recebe o diretório base e a pasta destino dos Backups, que será aninhada ao diretório base. (Caso não exista diretório de backup, será criado um.)
+  * A partir da Classe Date, é criado o arquivo de backup e backup-names contendo a data atual em seus nomes separados por um hífen. Dentro dos arquivos conterá os dados codificados dos arquivos .db e de seus nomes, respectivamente.
+  * A partir da função List() da classe File, é retornado o nome de todos os arquivos e diretórios inclusos dentro do diretório base.
+  * É criado um cabeçalho no início do arquivo de saída, que conterá o número de arquivos e diretórios, em seguida, é alocado um espaço para o endereçamento, que será utilizado para determinar a posição final de cada arquivo. 
+  * Para cada nome lido, verifica se existem diretórios ou arquivos que não possuem o formato .db, ignorando todos eles e atualizando o ponteiro do arquivo atual. Caso o arquivo esteja no formato .db, ele será escrito na saída de nomes. Depois disso, é inicializado o dicionário e o arquivo a ser codificado será lido de forma sequencial byte a byte ao mesmo tempo que o resultado de sua codificação é escrito no caminho de saída.
 
-#### Update
-- A String do titulo antigo e do titulo novo são tratadas e cada palavra é separada.
-- Cada palavra do título antigo é deletada do dicionário com seu respectivo id da lista invertida.
-- Cada palavra do título novo é inserida no dicionário com seu respectivo id da lista invertida.
+* `void decodifica(String fileName, String backupDirPath, String restoredPath)`
+  * Recebe o nome do arquivo a ser restaurado, assim como o caminho deste arquivo e o diretório onde será armazenado a descompressão. (Se o diretório de descompressão não existir, será criado um para tal).
+  * Verifica se o arquivo de backup e backup-names existem para seguir a execução.
+  * Lê do arquivo de backup todos os ponteiros de parada localizados no cabeçalho, assim como cada nome dentro de backup-names.
+  * Para cada ponto de parada do cabeçalho em backup, caso o ponto de parada seja igual ao ponto de escrita, a iteração será pulada. Caso contrário, é criado um novo arquivo identificado pelo nome lido de backup-names.
+  * Em seguida, com o dicionário inicilizado, é feita a descompressão do arquivo backup do ponto atual até o ponto de parada para cada arquivo restaurado.
 
-#### Delete
-- A String do titulo é tratada e cada palavra é separada.
-- Cada palavra do título é deletada do dicionário com seu respectivo id da lista invertida.
+* `void atualizarPontosDeParada(RandomAccessFile out)`
+  * Vai ao início do cabeçalho do arquivo backup, atualiza a quantidade de pontos de parada e armazena um novo ponto de parada no final do cabeçalho.
+
+####  Criação da Classe MenuBackup
+
+* `void menu()`
+  * Um menu de opções, realizado com Switch Case, mostrando as opções: 1) Fazer Backup, 2) Restaurar Backup e 0) Retornar ao Menu anterior.
+  * Fazer Backup chama a função `codifica(...)` da classe `ArquivoLZW`.
+  * Restaurar Backup chama a função `chooseBackupFile()`, desta mesma classe, que listará o nome de cada arquivo backup disponível para ser restaurado e retorna a escolha do usuário para o parâmetro formal `String filename` da função `decodifica(...)`.
 
 ## Resultados
 
-
-
 ### Checklist
 
-#### - A inclusão de um livro acrescenta os termos do seu título à lista invertida?
+#### - Há uma rotina de compactação usando o algoritmo LZW para fazer backup dos arquivos?
 
-<pre> Sim, todos os termos tratados com suas respectivas chaves. </pre>
+<pre> Sim, os arquivos .db são lidos como um vetor de bytes e compactados utilizando-se do algoritmo LZW. <br> <strong>OBS:</strong> Os bits do índice foram fixados em 16bits para o processo de codificação e decodificação. </pre>
 
-#### - A alteração de um livro modifica a lista invertida removendo ou acrescentando termos do título?
+#### - Há uma rotina de descompactação usando o algoritmo LZW para recuperação dos arquivos?
 
-<pre> Sim, os termos antigos são removidos e os novos acrescentados. </pre>
+<pre> Sim, a descompressão é feita byte a byte, utilizando de um vetor de bytes único contendo todos os arquivos compactados e armazenados em um diretório de restauração específico para melhor legilibidade e usabilidade. </pre>
 
-#### - A remoção de um livro gera a remoção dos termos do seu título na lista invertida?
+#### - O usuário pode escolher a versão a recuperar?
 
-<pre> Sim, cada termo com seu respectivo ID é removido da lista invertida. </pre>
+<pre> Sim, através da função <i><strong>chooseBackupFile()</strong></i>. </pre>
 
-#### - Há uma busca por palavras que retorna os livros que possuam essas palavras?
+#### - Qual foi a taxa de compressão alcançada por esse backup?
 
-<pre> Sim, a busca retorna um array de livros que é utilizado no método mostraLivros.  </pre>
-
-#### - Essa busca pode ser feita com mais de uma palavra?
-
-<pre> Sim, assim como foi explicado no relatório inicial. </pre>
-
-#### - As stop words foram removidas de todo o processo?
-
-<pre> Sim, a partir de um arrayList que é criado na inicialização da classe ArquivoLivros.  </pre>
-
-#### - Que modificação, se alguma, você fez para além dos requisitos mínimos desta tarefa?
-
-<pre> Além do tratamento pedido, removemos qualquer caractere extra que esteja junto à palavra. Por exemplo, "Memória:" é tratado para "memoria". </pre>
+<pre>O tamanho do backup chegou a ser aproximadamente 1,39 vezes menor do que a soma de todos os arquivos descompactados, considerando os arquivos de dados iniciais. Portanto, a taxa de compressão foi de aproximadamente 139%.</pre>
 
 #### - O trabalho está funcionando corretamente?
 
@@ -78,4 +64,4 @@ Foram modificadas as funções CRUD da classe ArquivoLivros.java para incluir a 
 
 #### - O trabalho é original e não a cópia de um trabalho de um colega?
 
-<pre> Sim, o trabalho foi implemetado usando código desenvolvido pelo grupo utilizando apenas a base disponibilizada pelo Professor no Canvas. </pre>
+<pre> Sim, o trabalho foi implemetado usando código desenvolvido pelo grupo no TP2 (Listas Invertidas) e também da base do algoritmo LZW disponibilizada pelo Professor no Canvas. </pre>
