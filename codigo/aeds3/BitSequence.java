@@ -1,3 +1,4 @@
+package aeds3;
 import java.util.BitSet;
 
 // Armazena uma sequência de números em um vetor de bits

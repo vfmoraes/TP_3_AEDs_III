@@ -19,15 +19,16 @@ public class Principal {
 
       int opcao;
       do {
-        System.out.println("\n\n\nBOOKAEDS 1.0");
-        System.out.println("------------");
-        System.out.println("\n> Início");
-        System.out.println("\n1) Categorias");
-        System.out.println("2) Autores");
-        System.out.println("3) Livros");
-        System.out.println("\n9) Reiniciar BD");
-        System.out.println("\n0) Sair");
-
+        System.out.println("\n\n\nBOOKAEDS 1.0"
+                          +"------------"
+                          +"\n> Início"
+                          +"\n1) Categorias"
+                          +"\n2) Autores"
+                          +"\n3) Livros"
+                          +"\n9) Reiniciar BD"
+                          +"\n10) Backup"
+                          +"\n0) Sair");
+        
         System.out.print("\nOpção: ");
         try {
           opcao = Integer.valueOf(console.nextLine());
@@ -50,6 +51,8 @@ public class Principal {
           case 9:
             preencherDados();
             break;
+          case 10:
+            (new MenuBackup()).menu();
           case 0:
             break;
           default:
