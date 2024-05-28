@@ -22,7 +22,7 @@ Repositório do Trabalho Prático III de Algoritmos e Estrutura de Dados III
   * Verifica se o arquivo de backup e backup-names existem para seguir a execução.
   * Lê do arquivo de backup todos os ponteiros de parada localizados no cabeçalho, assim como cada nome dentro de backup-names.
   * Para cada ponto de parada do cabeçalho em backup, caso o ponto de parada seja igual ao ponto de escrita, a iteração será pulada. Caso contrário, é criado um novo arquivo identificado pelo nome lido de backup-names.
-  * Em seguida, com o dicionário inicilizado, é feita a descompressão do arquivo backup do ponto atual até o ponto de parada para cada arquivo restaurado.
+  * Em seguida, com o dicionário inicilizado, é feita a descompressão do arquivo backup do ponto atual até o ponto de parada para cada arquivo restaurado, que serão armazenados dentro da pasta restored.
 
 * `void atualizarPontosDeParada(RandomAccessFile out)`
   * Vai ao início do cabeçalho do arquivo backup, atualiza a quantidade de pontos de parada e armazena um novo ponto de parada no final do cabeçalho.
