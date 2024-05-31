@@ -219,6 +219,7 @@ public class ArquivoLZW {
             qtdeTotalLinhas += in.length();
 
             vetorBytes = new ArrayList<>();//inicializar vetor auxiliar
+
             while (in.getFilePointer() != in.length()) {//para todo o arquivo de leitura
                 byte leitura = in.readByte();
                 //adicionar byte atual no vetor auxiliar de bytes
@@ -250,13 +251,17 @@ public class ArquivoLZW {
                     if (dicionario.size() < Math.pow(2, BITS_POR_INDICE)) {
                         dicionario.add(new ArrayList<>(vetorBytes));
                     }
-                    vetorBytes.remove(vetorBytes.size() - 1); //remover o ultimo byte que não contém no dicionario
+                    vetorBytes.removeLast(); //remover o ultimo byte que não contém no dicionario
 
                     out.writeShort(dicionario.indexOf(vetorBytes)); // Escrevendo index de 16-bit no arquivo de saída
                     
                     vetorBytes = new ArrayList<>();
                     vetorBytes.add(leitura);
                 }
+            }
+            //escrever último bit acumulado para o arquivo de saída
+            if(!vetorBytes.isEmpty()){
+                out.writeShort(dicionario.indexOf(vetorBytes)); // Escrevendo index de 16-bit no arquivo de saída
             }
 
             //escrever ponto de parada para o arquivo lido

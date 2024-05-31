@@ -13,7 +13,7 @@ public class MenuBackup {
     // -------------
     // Diretorios de dados e complementos
     // -------------
-    private static String initialDataPath = "codigo/dados/";
+    private static String initialDataPath = "dados/";
     private static String restoredComplementPath = "restored/";
     private static String backupComplementPath = "backups/";
 
@@ -40,7 +40,7 @@ public class MenuBackup {
                 System.out.println("------------");
                 System.out.println("\n> Início > Backup > Restauração");
 
-                System.out.println("\nEscolha o número referente ao arquivo que deseja fazer backup: ");
+                System.out.println("\nEscolha o número referente ao arquivo que deseja fazer backup (Recomendável substituir tudo para evitar quebrar algo): ");
                 // for (String fileName : filteredFiles) {
                 for (int i = 0; i < filteredFiles.length; i++) {
                     System.out.println(i + 1 + ") " + filteredFiles[i]);
@@ -129,19 +129,11 @@ public class MenuBackup {
     }
 
     public void substituiArquivo(String file) throws Exception {
-        File arquivoOld = new File(initialDataPath + file);
         Path backup = Paths.get(initialDataPath + restoredComplementPath + file);
         Path dados = Paths.get(initialDataPath + file);
 
-        if(!arquivoOld.exists()){
-            arquivoOld.createNewFile();
-        }
-
-        if (arquivoOld.exists()) {
-            arquivoOld.delete();
-            Files.copy(backup, dados);
-        }
-
+        Files.deleteIfExists(dados);
+        Files.copy(backup, dados);
     }
 
     public void menu() throws Exception {

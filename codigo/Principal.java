@@ -1,5 +1,7 @@
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 import arquivos.ArquivoAutores;
@@ -8,6 +10,8 @@ import arquivos.ArquivoLivros;
 import entidades.Autor;
 import entidades.Categoria;
 import entidades.Livro;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Principal {
 
@@ -67,21 +71,32 @@ public class Principal {
 
   public static void preencherDados() {
     try {
-      new File("dados/categorias.db").delete();
-      new File("dados/categorias.hash_d.db").delete();
-      new File("dados/categorias.hash_c.db").delete();
-      new File("dados/autores.db").delete();
-      new File("dados/autores.hash_d.db").delete();
-      new File("dados/autores.hash_c.db").delete();
-      new File("dados/livros.db").delete();
-      new File("dados/livros.hash_d.db").delete();
-      new File("dados/livros.hash_c.db").delete();
-      new File("dados/livros_isbn.hash_d.db").delete();
-      new File("dados/livros_isbn.hash_c.db").delete();
-      new File("dados/livros_categorias.btree.db").delete();
-      new File("dados/dicionario.listainv.db").delete();
-      new File("dados/blocos.listainv.db").delete();
+      File dir = new File("dados/");
+      String[] fileNames = dir.list();
 
+      for(String name : fileNames){
+        String[] splitted = name.split("\\.");
+        if(splitted.length>0 && splitted[splitted.length-1].equals("db")){
+          Path path = Paths.get("dados/"+name);
+          Files.deleteIfExists(path);
+        }
+      }
+
+      // new File("codigo/dados/categorias.db").delete();
+      // new File("codigo/dados/categorias.hash_d.db").delete();
+      // new File("codigo/dados/categorias.hash_c.db").delete();
+      // new File("codigo/dados/autores.db").delete();
+      // new File("codigo/dados/autores.hash_d.db").delete();
+      // new File("codigo/dados/autores.hash_c.db").delete();
+      // new File("codigo/dados/livros.db").delete();
+      // new File("codigo/dados/livros.hash_d.db").delete();
+      // new File("codigo/dados/livros.hash_c.db").delete();
+      // new File("codigo/dados/livros_isbn.hash_d.db").delete();
+      // new File("codigo/dados/livros_isbn.hash_c.db").delete();
+      // new File("codigo/dados/livros_categorias.btree.db").delete();
+      // new File("codigo/dados/dicionario.listainv.db").delete();
+      // new File("codigo/dados/blocos.listainv.db").delete();
+      
       ArquivoLivros arqLivros = new ArquivoLivros();
       ArquivoCategorias arqCategorias = new ArquivoCategorias();
       ArquivoAutores arqAutores = new ArquivoAutores();
